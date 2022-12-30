@@ -1,5 +1,14 @@
 # AlienInvaders
-simple 2D game done in PyGame
+simple 2D game done in Pygame
 
 # Used Technologies:
-python 3.8, pygame
+- Python 3.8
+- Pygame 2.1.2
+
+
+
+
+
+
+
+

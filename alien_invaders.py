@@ -1,6 +1,7 @@
 import sys
 from settings import Settings
 import pygame
+from ship import Ship
 
 
 class AlienInvaders:
@@ -13,8 +14,10 @@ class AlienInvaders:
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Alien Invaders")
 
-        # """Define the backscreen color"""
-        # self.bg_color = (10, 10, 60)
+        self.ship = Ship(self)
+
+        # Define the backscreen color
+        self.bg_color = (10, 10, 60)
 
     def run_game(self):
         """Run the game loop"""
@@ -23,10 +26,11 @@ class AlienInvaders:
                 if event.type == pygame.QUIT:
                     sys.exit()
 
-            """Refreshing the screen during every game loop"""
+            # Refreshing the screen during every game loop
             self.screen.fill(self.settings.bg_color)
+            self.ship.blitme()
 
-            """Display the last modified screen"""
+            # Display the last modified screen
             pygame.display.flip()
 
 

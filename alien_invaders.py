@@ -149,10 +149,6 @@ class AlienInvaders:
         else:
             self.stats.game_active = False
 
-
-
-
-
     def _check_aliens_bottom(self):
         """Check, if any alien get to the bottom of the screen"""
         screen_rect = self.screen.get_rect()
@@ -160,7 +156,6 @@ class AlienInvaders:
             if alien.rect.bottom >= screen_rect.bottom:
                 self._ship_hit()
                 break
-
 
     def _update_screen(self):
         """Update images on screen and get into new screen"""

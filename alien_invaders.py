@@ -29,8 +29,7 @@ class AlienInvaders:
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
 
-        self.play_button = Button(self,  "Play Game")
-
+        self.play_button = Button(self, "Play Game")
 
     def run_game(self):
         """Run the game loop"""
@@ -57,7 +56,7 @@ class AlienInvaders:
                 mouse_pos = pygame.mouse.get_pos()
                 self._check_play_button(mouse_pos)
 
-    def _check_play_button(self,mouse_pos):
+    def _check_play_button(self, mouse_pos):
         """Start new game after clicking 'Play' button"""
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
         if button_clicked and not self.stats.game_active:
@@ -71,9 +70,7 @@ class AlienInvaders:
             self.settings.initialize_dynamic_settings()
             self.scoreboard.prep_score()
             self.scoreboard.prep_lvl()
-
-
-
+            self.scoreboard.prep_ships()
 
     def _check_keydown_events(self, event):
         """Reactions for inserted key"""
@@ -92,7 +89,6 @@ class AlienInvaders:
             self.ship.moving_right = False
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = False
-
 
     def _fire_bullet(self):
         """Create a new bullet and add it to a bullet group"""
@@ -178,13 +174,14 @@ class AlienInvaders:
         """Reaction for hit the ship by alien"""
         if self.stats.ships_left > 0:
             self.stats.ships_left -= 1
+            self.scoreboard.prep_ships()
 
             self.aliens.empty()
             self.bullets.empty()
             self._create_fleet()
             self.ship.center_ship()
-
             sleep(1)
+
         else:
             self.stats.game_active = False
 

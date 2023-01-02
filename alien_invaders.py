@@ -66,6 +66,7 @@ class AlienInvaders:
             self._create_fleet()
             self.ship.center_ship()
             pygame.mouse.set_visible(False)
+            self.settings.initialize_dynamic_settings()
 
 
 
@@ -110,6 +111,7 @@ class AlienInvaders:
         if not self.aliens:
             self.bullets.empty()
             self._create_fleet()
+            self.settings.increase_speed()
 
     def create_alien(self, alien_number, row_number):
         alien = Alien(self)

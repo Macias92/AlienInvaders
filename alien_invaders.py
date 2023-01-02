@@ -7,6 +7,7 @@ from bullet import Bullet
 from alien import Alien
 from game_stats import GameStats
 from button import Button
+from scoreboard import Scoreboard
 
 
 class AlienInvaders:
@@ -22,6 +23,7 @@ class AlienInvaders:
         pygame.display.set_caption("Alien Invaders")
 
         self.stats = GameStats(self)
+        self.scoreboard = Scoreboard(self)
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
@@ -67,6 +69,9 @@ class AlienInvaders:
             self.ship.center_ship()
             pygame.mouse.set_visible(False)
             self.settings.initialize_dynamic_settings()
+            self.scoreboard.prep_score()
+            self.scoreboard.prep_lvl()
+
 
 
 
@@ -108,10 +113,20 @@ class AlienInvaders:
     def _check_bullet_alien_collisions(self):
         """Check collisions between bullet and alien"""
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
+
+        if collisions:
+            for aliens in collisions.values():
+                self.stats.score += self.settings.alien_points * len(aliens)
+            self.scoreboard.prep_score()
+            self.scoreboard.check_high_score()
+
         if not self.aliens:
             self.bullets.empty()
             self._create_fleet()
             self.settings.increase_speed()
+
+            self.stats.level += 1
+            self.scoreboard.prep_lvl()
 
     def create_alien(self, alien_number, row_number):
         alien = Alien(self)
@@ -191,6 +206,7 @@ class AlienInvaders:
             bullet.draw_bullet()
 
         self.aliens.draw(self.screen)
+        self.scoreboard.show_score()
 
         if not self.stats.game_active:
             self.play_button.draw_button()

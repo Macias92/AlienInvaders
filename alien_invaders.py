@@ -29,7 +29,7 @@ class AlienInvaders:
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
 
-        self.play_button = Button(self, "Play Game")
+        self.play_button = Button(self, "New Game")
 
     def run_game(self):
         """Run the game loop"""
@@ -184,6 +184,7 @@ class AlienInvaders:
 
         else:
             self.stats.game_active = False
+            pygame.mouse.set_visible(True)
 
     def _check_aliens_bottom(self):
         """Check, if any alien get to the bottom of the screen"""

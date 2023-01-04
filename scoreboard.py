@@ -1,9 +1,6 @@
 import pygame.font
 from pygame.sprite import Group
-
-import game_stats
 from ship import Ship
-from game_stats import GameStats
 
 
 class Scoreboard:

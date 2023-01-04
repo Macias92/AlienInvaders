@@ -1,6 +1,9 @@
 import pygame.font
 from pygame.sprite import Group
+
+import game_stats
 from ship import Ship
+from game_stats import GameStats
 
 
 class Scoreboard:
@@ -67,6 +70,9 @@ class Scoreboard:
 
     def check_high_score(self):
         """Check high score done by far"""
-        if self.stats.score > self.stats.high_score:
-            self.stats.high_score = self.stats.score
+        ath_read = open('ath.txt')
+        ath_write = open('ath.txt', 'r+')
+        high_score = int(ath_read.readline())
+        if self.stats.score > high_score:
+            ath_write.write(str(self.stats.score))
             self.prep_high_score()

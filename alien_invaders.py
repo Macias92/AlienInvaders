@@ -2,6 +2,7 @@ import sys
 from time import sleep
 from settings import Settings
 import pygame
+from pygame import mixer
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
@@ -16,6 +17,8 @@ class AlienInvaders:
     def __init__(self):
         """Initialize the game and it's resources"""
         pygame.init()
+        pygame.mixer.pre_init(44100, -16, 2, 512)
+        mixer.init()
         self.settings = Settings()
         self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.settings.screen_width = self.screen.get_rect().width
@@ -40,6 +43,7 @@ class AlienInvaders:
                 self.ship.update()
                 self._update_bullets()
                 self._update_aliens()
+                self._load_sound_effects()
 
             self._update_screen()
 
@@ -74,6 +78,7 @@ class AlienInvaders:
 
     def _check_keydown_events(self, event):
         """Reactions for inserted key"""
+        self._load_sound_effects()
         if event.key == pygame.K_RIGHT:
             self.ship.moving_right = True
         elif event.key == pygame.K_LEFT:
@@ -82,6 +87,7 @@ class AlienInvaders:
             sys.exit()
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
+            self.laser_fx.play()
 
     def _check_keyup_events(self, event):
         """Reactions for released key"""
@@ -89,6 +95,16 @@ class AlienInvaders:
             self.ship.moving_right = False
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = False
+
+    def _load_sound_effects(self):
+        self.explosion_fx = pygame.mixer.Sound("audio/explosion.wav")
+        self.explosion_fx.set_volume(0.25)
+
+        self.explosion2_fx = pygame.mixer.Sound("audio/explosion2.wav")
+        self.explosion2_fx.set_volume(0.25)
+
+        self.laser_fx = pygame.mixer.Sound("audio/laser.wav")
+        self.laser_fx.set_volume(0.1)
 
     def _fire_bullet(self):
         """Create a new bullet and add it to a bullet group"""
@@ -109,8 +125,9 @@ class AlienInvaders:
     def _check_bullet_alien_collisions(self):
         """Check collisions between bullet and alien"""
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
-
+        self._load_sound_effects()
         if collisions:
+            self.explosion2_fx.play()
             for aliens in collisions.values():
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.scoreboard.prep_score()

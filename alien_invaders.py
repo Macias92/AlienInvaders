@@ -187,7 +187,7 @@ class AlienInvaders:
 
     def _check_alien_bullet_ship_collisions(self):
         """Check collisions between alien bullet and ship"""
-        collision = pygame.sprite.groupcollide(self.alien_bullets, self.ships, True, True)
+        collision = pygame.sprite.spritecollideany(self.ship, self.alien_bullets)
 
         if collision:
             self._ship_hit()
@@ -209,6 +209,7 @@ class AlienInvaders:
 
             self.aliens.empty()
             self.bullets.empty()
+            self.alien_bullets.empty()
             self._create_fleet()
             self.ship.center_ship()
             sleep(1)

@@ -36,7 +36,7 @@ class Settings:
         self.fleet_direction = 0.5
         self.alien_points = 50
         self.alien_bullet_speed = 1.0
-        self.alien_bullet_cd = 1000  # alien bullet cooldown in miliseconds
+        self.alien_bullet_cd = 2500  # alien bullet cooldown in miliseconds
 
     def increase_speed(self):
         """Change game speed settings"""

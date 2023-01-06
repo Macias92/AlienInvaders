@@ -205,8 +205,10 @@ class AlienInvaders:
     def _check_alien_bullet_ship_collisions(self):
         """Check collisions between alien bullet and ship"""
         collision = pygame.sprite.spritecollideany(self.ship, self.alien_bullets)
+        self._load_sound_effects()
 
         if collision:
+            self.explosion_fx.play()
             self._ship_hit()
 
     def _update_aliens(self):

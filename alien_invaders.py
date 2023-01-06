@@ -1,9 +1,10 @@
+import random
 import sys
 from time import sleep
 from settings import Settings
 import pygame
 from ship import Ship
-from bullet import Bullet
+from bullet import Bullet, AlienBullet
 from alien import Alien
 from game_stats import GameStats
 from button import Button
@@ -25,8 +26,10 @@ class AlienInvaders:
         self.stats = GameStats(self)
         self.scoreboard = Scoreboard(self)
         self.ship = Ship(self)
+        self.ships = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
+        self.alien_bullets = pygame.sprite.Group()
         self._create_fleet()
 
         self.play_button = Button(self, "New Game")
@@ -40,6 +43,8 @@ class AlienInvaders:
                 self.ship.update()
                 self._update_bullets()
                 self._update_aliens()
+                self._update_alien_bullets()
+                self.random_alien_bullets()
 
             self._update_screen()
 
@@ -63,6 +68,7 @@ class AlienInvaders:
             self.stats.reset_stats()
             self.stats.game_active = True
             self.aliens.empty()
+            self.alien_bullets.empty()
             self.bullets.empty()
             self._create_fleet()
             self.ship.center_ship()
@@ -105,6 +111,24 @@ class AlienInvaders:
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
+
+    def random_alien_bullets(self):
+        time_now = pygame.time.get_ticks()
+        if time_now - self.settings.last_alien_shot > self.settings.alien_bullet_cd:
+            self.shooting_alien = random.choice(self.aliens.sprites())
+            alien_bullet = AlienBullet(self, self.shooting_alien)
+            self.alien_bullets.add(alien_bullet)
+            self.settings.last_alien_shot = time_now
+
+    def _update_alien_bullets(self):
+        """Update alien bullet's location and remove those which are beyond the screen"""
+        self.alien_bullets.update()
+        self._check_alien_bullet_ship_collisions()
+
+        # Delete bullets which are beyond the screen
+        for bullet in self.alien_bullets.copy():
+            if bullet.rect.top > self.settings.screen_height:
+                self.alien_bullets.remove(bullet)
 
     def _check_bullet_alien_collisions(self):
         """Check collisions between bullet and alien"""
@@ -161,6 +185,13 @@ class AlienInvaders:
             alien.rect.y += self.settings.fleet_drop_speed
         self.settings.fleet_direction *= -1
 
+    def _check_alien_bullet_ship_collisions(self):
+        """Check collisions between alien bullet and ship"""
+        collision = pygame.sprite.spritecollideany(self.ship, self.alien_bullets)
+
+        if collision:
+            self._ship_hit()
+
     def _update_aliens(self):
         self._check_fleet_edges()
         self.aliens.update()
@@ -178,6 +209,7 @@ class AlienInvaders:
 
             self.aliens.empty()
             self.bullets.empty()
+            self.alien_bullets.empty()
             self._create_fleet()
             self.ship.center_ship()
             sleep(1)
@@ -202,6 +234,9 @@ class AlienInvaders:
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+
+        for alien_bullet in self.alien_bullets.sprites():
+            alien_bullet.draw_alien_bullet()
 
         self.aliens.draw(self.screen)
         self.scoreboard.show_score()

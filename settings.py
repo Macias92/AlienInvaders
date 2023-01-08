@@ -9,7 +9,8 @@ class Settings:
         self.screen_width = 1680
         self.screen_height = 1000
         self.bg = pygame.image.load('images/space_background.png')
-        self.ship_limit = 2
+        self.ship_limit = 3
+        self.ship_speed = 3.5
 
         # Bullet settings
         self.bullet_width = 3
@@ -30,7 +31,6 @@ class Settings:
 
     def initialize_dynamic_settings(self):
         """Initialize settings which are changing during the game"""
-        self.ship_speed = 3.5
         self.bullet_speed = 2.0
         self.alien_speed = 0.5
         self.fleet_direction = 0.5

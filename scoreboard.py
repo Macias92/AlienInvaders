@@ -33,7 +33,7 @@ class Scoreboard:
     def prep_high_score(self):
         """Put high score on the screen"""
         high_score = round(self.stats.high_score, -1)
-        high_score_str = str(high_score)
+        high_score_str = "{:,}".format(high_score)
         self.high_score_image = self.font.render(high_score_str, True, self.text_color, None)
 
         self.high_score_rect = self.high_score_image.get_rect()

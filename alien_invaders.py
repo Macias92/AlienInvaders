@@ -34,6 +34,7 @@ class AlienInvaders:
         self.aliens = pygame.sprite.Group()
         self.alien_bullets = pygame.sprite.Group()
         self._create_fleet()
+        self._load_sound_effects()
 
         self.play_button = Button(self, "New Game")
 
@@ -48,7 +49,6 @@ class AlienInvaders:
                 self._update_aliens()
                 self._update_alien_bullets()
                 self.random_alien_bullets()
-                self._load_sound_effects()
                 
             self._update_screen()
 
@@ -84,7 +84,6 @@ class AlienInvaders:
 
     def _check_keydown_events(self, event):
         """Reactions for inserted key"""
-        self._load_sound_effects()
         if event.key == pygame.K_RIGHT:
             self.ship.moving_right = True
         elif event.key == pygame.K_LEFT:
@@ -149,7 +148,6 @@ class AlienInvaders:
     def _check_bullet_alien_collisions(self):
         """Check collisions between bullet and alien"""
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
-        self._load_sound_effects()
         if collisions:
             self.explosion2_fx.play()
             for aliens in collisions.values():
@@ -159,8 +157,10 @@ class AlienInvaders:
 
         if not self.aliens:
             self.bullets.empty()
+            self.alien_bullets.empty()
             self._create_fleet()
             self.settings.increase_speed()
+            sleep(0.5)
 
             self.stats.level += 1
             self.scoreboard.prep_lvl()
@@ -205,7 +205,6 @@ class AlienInvaders:
     def _check_alien_bullet_ship_collisions(self):
         """Check collisions between alien bullet and ship"""
         collision = pygame.sprite.spritecollideany(self.ship, self.alien_bullets)
-        self._load_sound_effects()
 
         if collision:
             self.explosion_fx.play()
@@ -222,7 +221,7 @@ class AlienInvaders:
 
     def _ship_hit(self):
         """Reaction for hit the ship by alien"""
-        if self.stats.ships_left > 0:
+        if self.stats.ships_left > 1:
             self.stats.ships_left -= 1
             self.scoreboard.prep_ships()
 

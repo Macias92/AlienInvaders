@@ -7,8 +7,9 @@ Game requires the following to get started:
 - Python 3.8
 - Pygame 2.1.2
 
+'''
 $ pip install pygame
-
+'''
 
 # Game:
 To start a program run alien_invaders.py. 

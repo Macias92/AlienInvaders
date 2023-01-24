@@ -225,10 +225,8 @@ class AlienInvaders:
             self.stats.ships_left -= 1
             self.scoreboard.prep_ships()
 
-            self.aliens.empty()
             self.bullets.empty()
             self.alien_bullets.empty()
-            self._create_fleet()
             self.ship.center_ship()
             sleep(1)
 
